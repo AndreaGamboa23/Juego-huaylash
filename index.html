@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Huaylash | El corazón del Mantaro</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <div id="game">
+      <!-- =====================================================
+         CANVAS DEL VIDEOJUEGO
+    ====================================================== -->
+      <canvas id="gameCanvas"></canvas>
+
+      <!-- =====================================================
+         EFECTOS
+    ====================================================== -->
+      <div class="vignette"></div>
+      <div class="grain"></div>
+
+      <!-- =====================================================
+         PORTADA
+    ====================================================== -->
+      <section id="startScreen" class="screen active">
+        <div class="start-background"></div>
+
+        <div class="start-content">
+          <div class="location">HUANCAYO · JUNÍN · PERÚ</div>
+
+          <div class="title-line"></div>
+
+          <h1>HUAYLASH</h1>
+
+          <h2>El corazón del Mantaro</h2>
+
+          <p class="intro">
+            Una experiencia interactiva para descubrir la historia, la música,
+            la vestimenta y la danza de una tradición viva.
+          </p>
+
+          <div class="start-buttons">
+            <button id="newGameBtn" class="main-button">COMENZAR</button>
+
+            <button id="continueBtn" class="secondary-button">CONTINUAR</button>
+          </div>
+
+          <div class="controls-preview">
+            <span>WASD</span> Mover <span>E</span> Interactuar
+            <span>M</span> Mapa <span>C</span> Colección
+          </div>
+        </div>
+      </section>
+
+      <!-- =====================================================
+         PERSONALIZACIÓN
+    ====================================================== -->
+      <section id="characterScreen" class="screen">
+        <div class="character-container">
+          <div class="character-header">
+            <span class="eyebrow">PRIMER PASO</span>
+            <h2>Crea a tu personaje</h2>
+            <p>Personaliza al protagonista que recorrerá el Museo Huaylash.</p>
+          </div>
+
+          <div class="character-editor">
+            <!-- PREVISUALIZACIÓN -->
+            <div class="character-preview">
+              <div class="preview-glow"></div>
+
+              <canvas id="characterPreview" width="420" height="520"> </canvas>
+
+              <div class="preview-name">TU PERSONAJE</div>
+            </div>
+
+            <!-- CONTROLES -->
+            <div class="customization-panel">
+              <div class="custom-section">
+                <label>PERSONAJE</label>
+
+                <div class="gender-buttons">
+                  <button class="choice-button active" data-gender="female">
+                    MUJER
+                  </button>
+
+                  <button class="choice-button" data-gender="male">
+                    VARÓN
+                  </button>
+                </div>
+              </div>
+
+              <div class="custom-section">
+                <label>TONO DE PIEL</label>
+
+                <div class="color-row">
+                  <button
+                    class="skin-choice active"
+                    data-skin="#9b633f"
+                    style="background: #9b633f"
+                  ></button>
+
+                  <button
+                    class="skin-choice"
+                    data-skin="#b97c53"
+                    style="background: #b97c53"
+                  ></button>
+
+                  <button
+                    class="skin-choice"
+                    data-skin="#d59a70"
+                    style="background: #d59a70"
+                  ></button>
+
+                  <button
+                    class="skin-choice"
+                    data-skin="#75462f"
+                    style="background: #75462f"
+                  ></button>
+                </div>
+              </div>
+
+              <div class="custom-section">
+                <label>CABELLO</label>
+
+                <div class="color-row">
+                  <button
+                    class="hair-choice active"
+                    data-hair="#201712"
+                    style="background: #201712"
+                  ></button>
+
+                  <button
+                    class="hair-choice"
+                    data-hair="#4a281a"
+                    style="background: #4a281a"
+                  ></button>
+
+                  <button
+                    class="hair-choice"
+                    data-hair="#703d23"
+                    style="background: #703d23"
+                  ></button>
+                </div>
+              </div>
+
+              <div class="custom-section">
+                <label>VESTIMENTA</label>
+
+                <div class="outfit-grid">
+                  <button class="outfit-choice active" data-outfit="classic">
+                    <span>01</span>
+                    TRADICIONAL
+                  </button>
+
+                  <button class="outfit-choice" data-outfit="modern">
+                    <span>02</span>
+                    CONTEMPORÁNEA
+                  </button>
+
+                  <button class="outfit-choice" data-outfit="festival">
+                    <span>03</span>
+                    FESTIVAL
+                  </button>
+                </div>
+              </div>
+
+              <button id="enterWorldBtn" class="main-button full">
+                ENTRAR AL MUNDO
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =====================================================
+         HUD
+    ====================================================== -->
+      <div id="hud" class="hidden">
+        <div class="hud-top">
+          <div class="brand-mini">
+            <strong>HUAYLASH</strong>
+            <span>El corazón del Mantaro</span>
+          </div>
+
+          <div class="mission-box">
+            <div class="mission-label">MISIÓN ACTUAL</div>
+
+            <div id="missionText">Explora la plaza.</div>
+          </div>
+
+          <div class="hud-buttons">
+            <button id="mapBtn">M</button>
+
+            <button id="collectionBtn">C</button>
+          </div>
+        </div>
+
+        <div class="hud-bottom">
+          <div class="objective-indicator">
+            <span class="objective-dot"></span>
+            <span id="objectiveText"> Busca a Amalia, la guía del museo. </span>
+          </div>
+
+          <div class="progress-container">
+            <div class="progress-text">
+              MEMORIAS
+              <span id="memoryCount">0 / 6</span>
+            </div>
+
+            <div class="progress-bar">
+              <div id="progressFill"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =====================================================
+         INDICACIÓN DE INTERACCIÓN
+    ====================================================== -->
+      <div id="interactionHint" class="interaction hidden">
+        <div class="interaction-key">E</div>
+
+        <div>
+          <strong id="interactionTitle"> Interactuar </strong>
+
+          <span id="interactionDescription"> Examinar </span>
+        </div>
+      </div>
+
+      <!-- =====================================================
+         TOAST
+    ====================================================== -->
+      <div id="toast" class="toast">
+        <div id="toastTitle"></div>
+        <div id="toastMessage"></div>
+      </div>
+
+      <!-- =====================================================
+         PANEL GENERAL
+    ====================================================== -->
+      <div id="modal" class="modal hidden">
+        <div class="modal-window">
+          <button class="close-modal" id="closeModal">×</button>
+
+          <div id="modalContent"></div>
+        </div>
+      </div>
+
+      <!-- =====================================================
+         MAPA
+    ====================================================== -->
+      <div id="mapModal" class="overlay hidden">
+        <div class="map-window">
+          <button class="close-modal" id="closeMap">×</button>
+
+          <div class="eyebrow">MAPA INTERACTIVO</div>
+
+          <h2>Museo Huaylash</h2>
+
+          <div class="map-layout">
+            <div class="museum-map">
+              <div class="map-room entrance-room" data-location="plaza">
+                <span>01</span>
+                PLAZA
+              </div>
+
+              <div class="map-room" data-location="history">
+                <span>02</span>
+                HISTORIA
+              </div>
+
+              <div class="map-room" data-location="clothing">
+                <span>03</span>
+                VESTIMENTA
+              </div>
+
+              <div class="map-room" data-location="music">
+                <span>04</span>
+                MÚSICA
+              </div>
+
+              <div class="map-room" data-location="dance">
+                <span>05</span>
+                DANZA
+              </div>
+
+              <div class="map-room" data-location="mantaro">
+                <span>06</span>
+                MANTARO
+              </div>
+
+              <div class="map-room festival-room" data-location="festival">
+                <span>07</span>
+                GRAN FESTIVAL
+              </div>
+            </div>
+
+            <div class="map-info">
+              <h3>Tu recorrido</h3>
+
+              <p>
+                Explora cada espacio, conversa con los personajes y completa las
+                actividades para desbloquear el Gran Festival.
+              </p>
+
+              <div class="map-legend">
+                <div>
+                  <i class="legend-current"></i>
+                  Tu posición
+                </div>
+
+                <div>
+                  <i class="legend-open"></i>
+                  Zona disponible
+                </div>
+
+                <div>
+                  <i class="legend-locked"></i>
+                  Zona bloqueada
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =====================================================
+         COLECCIÓN
+    ====================================================== -->
+      <div id="collectionModal" class="overlay hidden">
+        <div class="collection-window">
+          <button class="close-modal" id="closeCollection">×</button>
+
+          <div class="eyebrow">ARCHIVO CULTURAL</div>
+
+          <h2>Mis memorias</h2>
+
+          <p class="collection-intro">
+            Cada sala guarda una memoria relacionada con la experiencia del
+            Huaylash.
+          </p>
+
+          <div id="collectionGrid" class="collection-grid"></div>
+        </div>
+      </div>
+
+      <!-- =====================================================
+         VIDEO
+    ====================================================== -->
+      <div id="videoModal" class="overlay hidden">
+        <div class="video-window">
+          <button class="close-modal" id="closeVideo">×</button>
+
+          <div class="eyebrow">GRAN FESTIVAL</div>
+
+          <h2>Huaylash: una tradición viva</h2>
+
+          <p>
+            Observa el material audiovisual y descubre cómo la música, la danza,
+            la vestimenta y la comunidad mantienen viva esta expresión cultural.
+          </p>
+
+          <div class="video-wrapper">
+            <div class="video-wrapper">
+              <iframe
+                id="youtubeFrame"
+                width="560"
+                height="315"
+                src="https://www.youtube-nocookie.com/embed/IHF0Hn0vLPk?start=9"
+                title="HUAYLARSH - Video documental"
+                frameborder="0"
+                allow="
+                  accelerometer;
+                  autoplay;
+                  clipboard-write;
+                  encrypted-media;
+                  gyroscope;
+                  picture-in-picture;
+                  web-share;
+                "
+                referrerpolicy="strict-origin-when-cross-origin"
+                allowfullscreen
+              >
+              </iframe>
+            </div>
+          </div>
+
+          <div class="video-footer">
+            <button id="finishVideoBtn" class="main-button">
+              CONTINUAR AL FESTIVAL
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- =====================================================
+         CONTROLES MÓVILES
+    ====================================================== -->
+      <div id="mobileControls" class="mobile-controls hidden">
+        <div class="mobile-dpad">
+          <button data-key="w">▲</button>
+
+          <div>
+            <button data-key="a">◀</button>
+            <button data-key="s">▼</button>
+            <button data-key="d">▶</button>
+          </div>
+        </div>
+
+        <button id="mobileInteract" class="mobile-interact">E</button>
+      </div>
+    </div>
+
+    <script src="game.js"></script>
+  </body>
+</html>
